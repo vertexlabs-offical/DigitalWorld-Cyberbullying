@@ -1,0 +1,14 @@
+[build]
+  base    = "."
+  command = "pnpm --filter @workspace/digital-world run build"
+  publish = "artifacts/digital-world/dist/public"
+
+[build.environment]
+  NODE_VERSION = "20"
+  BASE_PATH     = "/"
+
+# SPA fallback — send all routes to index.html
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200

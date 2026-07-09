@@ -90,29 +90,27 @@
   }
 }
 
-/* White flash peaks when blade crosses center */
+/* White flash peaks when blade crosses centre (50% of 1.6s = 800ms) */
 @keyframes katana-flash {
   0%   { opacity: 0; }
-  18%  { opacity: 0; }
-  34%  { opacity: 0.92; }
-  58%  { opacity: 0; }
+  38%  { opacity: 0; }
+  50%  { opacity: 0.88; }
+  65%  { opacity: 0; }
   100% { opacity: 0; }
 }
 
-/* Horizontal speed lines that burst out at flash peak */
+/* Horizontal speed lines — burst outward at flash peak then fade */
 @keyframes speed-line-left {
   0%   { transform: scaleX(0); opacity: 0; transform-origin: right center; }
-  28%  { transform: scaleX(0); opacity: 0; transform-origin: right center; }
-  42%  { transform: scaleX(1); opacity: 0.7; }
-  65%  { transform: scaleX(1); opacity: 0; }
+  20%  { transform: scaleX(1); opacity: 0.75; }
+  70%  { transform: scaleX(1); opacity: 0; }
   100% { opacity: 0; }
 }
 
 @keyframes speed-line-right {
   0%   { transform: scaleX(0); opacity: 0; transform-origin: left center; }
-  28%  { transform: scaleX(0); opacity: 0; transform-origin: left center; }
-  42%  { transform: scaleX(1); opacity: 0.7; }
-  65%  { transform: scaleX(1); opacity: 0; }
+  20%  { transform: scaleX(1); opacity: 0.75; }
+  70%  { transform: scaleX(1); opacity: 0; }
   100% { opacity: 0; }
 }
 
@@ -247,7 +245,7 @@
       0 0 6px 1px #ffffff,
       0 0 16px 3px #22d3ee,
       0 0 32px 6px rgba(168, 85, 247, 0.7);
-    animation: katana-slash 0.32s cubic-bezier(0.05, 0, 0.15, 1) both;
+    animation: katana-slash 1.6s cubic-bezier(0.4, 0, 0.2, 1) both;
     pointer-events: none;
   }
 
@@ -267,7 +265,7 @@
       transparent 100%
     );
     box-shadow: 0 0 10px 2px rgba(168, 85, 247, 0.5);
-    animation: katana-trail-1 0.38s cubic-bezier(0.08, 0, 0.2, 1) 40ms both;
+    animation: katana-trail-1 1.75s cubic-bezier(0.4, 0, 0.2, 1) 60ms both;
     pointer-events: none;
   }
 
@@ -287,7 +285,7 @@
       transparent 100%
     );
     box-shadow: 0 0 8px 2px rgba(34, 211, 238, 0.4);
-    animation: katana-trail-2 0.44s cubic-bezier(0.1, 0, 0.25, 1) 80ms both;
+    animation: katana-trail-2 1.9s cubic-bezier(0.4, 0, 0.2, 1) 120ms both;
     pointer-events: none;
   }
 
@@ -296,7 +294,7 @@
     position: fixed;
     inset: 0;
     background: #ffffff;
-    animation: katana-flash 0.65s ease-out both;
+    animation: katana-flash 1.6s ease-in-out both;
     pointer-events: none;
   }
 
@@ -318,10 +316,10 @@
     height: 1px;
     width: 60%;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6));
-    animation: speed-line-left 0.65s ease-out both;
+    animation: speed-line-left 0.9s ease-out both;
   }
-  .katana-speed-left::before { top: 35%; animation-delay: 10ms; }
-  .katana-speed-left::after  { top: 65%; width: 40%; animation-delay: 30ms; }
+  .katana-speed-left::before { top: 35%; animation-delay: 750ms; }
+  .katana-speed-left::after  { top: 65%; width: 40%; animation-delay: 780ms; }
 
   /* Speed lines — right side */
   .katana-speed-right {
@@ -341,10 +339,10 @@
     height: 1px;
     width: 60%;
     background: linear-gradient(90deg, rgba(255,255,255,0.6), transparent);
-    animation: speed-line-right 0.65s ease-out both;
+    animation: speed-line-right 0.9s ease-out both;
   }
-  .katana-speed-right::before { top: 35%; animation-delay: 10ms; }
-  .katana-speed-right::after  { top: 65%; width: 40%; animation-delay: 30ms; }
+  .katana-speed-right::before { top: 35%; animation-delay: 750ms; }
+  .katana-speed-right::after  { top: 65%; width: 40%; animation-delay: 780ms; }
 
   /* Screen shake — applied to root wrapper during transition */
   .screen-shake {

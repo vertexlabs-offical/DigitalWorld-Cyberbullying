@@ -3,7 +3,8 @@ import {
   ArrowUpRight, Award, Crown, X, Shield, AlertTriangle,
   BookOpen, Users, ChevronRight, ExternalLink,
 } from 'lucide-react';
-import bgVideo from '@assets/13dbcc57-d1fc-4339-a634-8a651e4288c7_1783616659657.mp4';
+// Video lives in /public so it's served at {base}/bg-video.mp4 on every host
+const bgVideo = `${import.meta.env.BASE_URL}bg-video.mp4`;
 
 type Page = 'home' | 'about' | 'awareness';
 
@@ -52,16 +53,16 @@ export default function App() {
     setSlashing(true);
     setShaking(true);
 
-    // 2. Switch page content at the white flash peak (~215ms)
+    // 2. Switch page content at the white flash peak (~800ms = 50% of 1.6s blade)
     timers.current.push(setTimeout(() => {
       setPage(nextPage.current);
-    }, 215));
+    }, 800));
 
-    // 3. End shake
-    timers.current.push(setTimeout(() => setShaking(false), 450));
+    // 3. End shake shortly after flash
+    timers.current.push(setTimeout(() => setShaking(false), 1300));
 
-    // 4. Unmount overlay
-    timers.current.push(setTimeout(() => setSlashing(false), 660));
+    // 4. Unmount overlay once blade + trails have fully cleared
+    timers.current.push(setTimeout(() => setSlashing(false), 2100));
   }, [page, slashing]);
 
   const navLinks: { label: string; page: Page }[] = [
