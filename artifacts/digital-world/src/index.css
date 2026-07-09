@@ -46,6 +46,94 @@
   50%       { text-shadow: 0 0 4px currentColor, 0 0 10px currentColor; }
 }
 
+/* ── Katana Slash Transition ────────────────────────────────── */
+
+/* Main blade: sweeps from upper-left to lower-right */
+@keyframes katana-slash {
+  0%   {
+    transform: translateX(-50%) translateY(-50%) rotate(-32deg) translateX(-220vw);
+    opacity: 0;
+  }
+  5%   { opacity: 1; }
+  95%  { opacity: 1; }
+  100% {
+    transform: translateX(-50%) translateY(-50%) rotate(-32deg) translateX(220vw);
+    opacity: 0;
+  }
+}
+
+/* Afterimage trail 1 – slightly slower, purple tint */
+@keyframes katana-trail-1 {
+  0%   {
+    transform: translateX(-50%) translateY(-50%) rotate(-32deg) translateX(-220vw);
+    opacity: 0;
+  }
+  12%  { opacity: 0.55; }
+  90%  { opacity: 0.3; }
+  100% {
+    transform: translateX(-50%) translateY(-50%) rotate(-32deg) translateX(220vw);
+    opacity: 0;
+  }
+}
+
+/* Afterimage trail 2 – even slower, thinner, cyan tint */
+@keyframes katana-trail-2 {
+  0%   {
+    transform: translateX(-50%) translateY(-50%) rotate(-32deg) translateX(-220vw);
+    opacity: 0;
+  }
+  20%  { opacity: 0.35; }
+  88%  { opacity: 0.15; }
+  100% {
+    transform: translateX(-50%) translateY(-50%) rotate(-32deg) translateX(220vw);
+    opacity: 0;
+  }
+}
+
+/* White flash peaks when blade crosses center */
+@keyframes katana-flash {
+  0%   { opacity: 0; }
+  18%  { opacity: 0; }
+  34%  { opacity: 0.92; }
+  58%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* Horizontal speed lines that burst out at flash peak */
+@keyframes speed-line-left {
+  0%   { transform: scaleX(0); opacity: 0; transform-origin: right center; }
+  28%  { transform: scaleX(0); opacity: 0; transform-origin: right center; }
+  42%  { transform: scaleX(1); opacity: 0.7; }
+  65%  { transform: scaleX(1); opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@keyframes speed-line-right {
+  0%   { transform: scaleX(0); opacity: 0; transform-origin: left center; }
+  28%  { transform: scaleX(0); opacity: 0; transform-origin: left center; }
+  42%  { transform: scaleX(1); opacity: 0.7; }
+  65%  { transform: scaleX(1); opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* Screen shake on slash impact */
+@keyframes screen-shake {
+  0%   { transform: translate(0, 0) rotate(0deg); }
+  20%  { transform: translate(-4px, 2px) rotate(-0.3deg); }
+  35%  { transform: translate(3px, -2px) rotate(0.2deg); }
+  50%  { transform: translate(-2px, 1px) rotate(-0.1deg); }
+  65%  { transform: translate(2px, -1px) rotate(0.1deg); }
+  80%  { transform: translate(-1px, 0px) rotate(0deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+/* Page content reveal after slash */
+@keyframes page-reveal {
+  0%   { opacity: 0; transform: translateY(12px); filter: brightness(2); }
+  40%  { filter: brightness(1.2); }
+  100% { opacity: 1; transform: translateY(0); filter: brightness(1); }
+}
+
 /* ── Animation utility classes ─────────────────────────────── */
 @layer utilities {
   .animate-fade-up {
@@ -134,6 +222,138 @@
     left: 2px;
     color: #22d3ee;
     animation: glitch 0.3s steps(1) infinite;
+  }
+
+  /* ── Katana blade & trails ──────────────────────────────── */
+  .katana-blade {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /* Long enough to span the diagonal of any screen */
+    width: 320vmax;
+    height: 4px;
+    /* Gradient: purple left edge → white core → cyan right edge */
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(168, 85, 247, 0.3) 18%,
+      rgba(200, 220, 255, 0.9) 42%,
+      #ffffff 50%,
+      rgba(200, 240, 255, 0.9) 58%,
+      rgba(34, 211, 238, 0.3) 82%,
+      transparent 100%
+    );
+    box-shadow:
+      0 0 6px 1px #ffffff,
+      0 0 16px 3px #22d3ee,
+      0 0 32px 6px rgba(168, 85, 247, 0.7);
+    animation: katana-slash 0.32s cubic-bezier(0.05, 0, 0.15, 1) both;
+    pointer-events: none;
+  }
+
+  /* Purple afterimage — 40ms behind the blade */
+  .katana-trail-1 {
+    position: fixed;
+    top: calc(50% + 6px);
+    left: 50%;
+    width: 320vmax;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(168, 85, 247, 0.6) 30%,
+      rgba(168, 85, 247, 0.8) 50%,
+      rgba(168, 85, 247, 0.6) 70%,
+      transparent 100%
+    );
+    box-shadow: 0 0 10px 2px rgba(168, 85, 247, 0.5);
+    animation: katana-trail-1 0.38s cubic-bezier(0.08, 0, 0.2, 1) 40ms both;
+    pointer-events: none;
+  }
+
+  /* Cyan afterimage — 80ms behind the blade */
+  .katana-trail-2 {
+    position: fixed;
+    top: calc(50% - 6px);
+    left: 50%;
+    width: 320vmax;
+    height: 1.5px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(34, 211, 238, 0.4) 30%,
+      rgba(34, 211, 238, 0.6) 50%,
+      rgba(34, 211, 238, 0.4) 70%,
+      transparent 100%
+    );
+    box-shadow: 0 0 8px 2px rgba(34, 211, 238, 0.4);
+    animation: katana-trail-2 0.44s cubic-bezier(0.1, 0, 0.25, 1) 80ms both;
+    pointer-events: none;
+  }
+
+  /* White flash overlay */
+  .katana-flash {
+    position: fixed;
+    inset: 0;
+    background: #ffffff;
+    animation: katana-flash 0.65s ease-out both;
+    pointer-events: none;
+  }
+
+  /* Speed lines — left side */
+  .katana-speed-left {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 50vw;
+    height: 100vh;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .katana-speed-left::before,
+  .katana-speed-left::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    height: 1px;
+    width: 60%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6));
+    animation: speed-line-left 0.65s ease-out both;
+  }
+  .katana-speed-left::before { top: 35%; animation-delay: 10ms; }
+  .katana-speed-left::after  { top: 65%; width: 40%; animation-delay: 30ms; }
+
+  /* Speed lines — right side */
+  .katana-speed-right {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 50vw;
+    height: 100vh;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .katana-speed-right::before,
+  .katana-speed-right::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    height: 1px;
+    width: 60%;
+    background: linear-gradient(90deg, rgba(255,255,255,0.6), transparent);
+    animation: speed-line-right 0.65s ease-out both;
+  }
+  .katana-speed-right::before { top: 35%; animation-delay: 10ms; }
+  .katana-speed-right::after  { top: 65%; width: 40%; animation-delay: 30ms; }
+
+  /* Screen shake — applied to root wrapper during transition */
+  .screen-shake {
+    animation: screen-shake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  }
+
+  /* Page content reveal animation */
+  .page-reveal {
+    animation: page-reveal 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 }
 
