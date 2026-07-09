@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "Digital World – Cyberbullying Awareness"
+version = "1.0.0"
+id = "artifacts/digital-world"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 19122
+
+[services.development]
+run = "pnpm --filter @workspace/digital-world run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/digital-world", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/digital-world/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19122"
+BASE_PATH = "/"
